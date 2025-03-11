@@ -1,0 +1,2 @@
+# RaiGit
+Naloga za SA
