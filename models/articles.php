@@ -29,7 +29,7 @@ class Article
         $this->user = User::find($user_id); //naložimo podatke o uporabniku
     }
 
-    // Metoda, ki iz baze vrne vse novice
+    // Metoda, ki iz baze vrne vse novice tap tap tap
     public static function all()
     {
         $db = Db::getInstance(); // pridobimo instanco baze
@@ -54,5 +54,22 @@ class Article
             return new Article($article->id, $article->title, $article->abstract, $article->text, $article->date, $article->user_id);
         }
         return null;
+    }
+
+    public static function create($title, $abstract, $text, $user_id)
+    {
+        $db = Db::getInstance();
+        // query
+        $query = "INSERT INTO articles (title, abstract, text, date, user_id) VALUES (?, ?, ?, NOW(), ?)";
+        $stmt = $db->prepare($query);
+        if (!$stmt) {
+            die("Napaka pri pripravi poizvedbe: " . $db->error);
+        }
+        $stmt->bind_param("sssi", $title, $abstract, $text, $user_id);
+        if ($stmt->execute()) { // zazeni
+            return true;
+        } else {
+            die("Napaka pri shranjevanju: " . $stmt->error);
+        }
     }
 }

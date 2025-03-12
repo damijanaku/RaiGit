@@ -40,4 +40,28 @@ class articles_controller
     public function create(){
         require_once('views/articles/create.php');
     }
+
+    function store()
+    {
+
+        if (!isset($_POST['title']) || !isset($_POST['abstract']) || !isset($_POST['text'])) {
+            die("Napaka: Manjkajoči podatki v obrazcu.");
+        }
+
+        if (!isset($_SESSION["USER_ID"])) {
+            die("Napaka: Uporabnik ni prijavljen.");
+        }
+
+        $title = $_POST['title'];
+        $abstract = $_POST['abstract'];
+        $text = $_POST['text'];
+        $user_id = $_SESSION["USER_ID"];
+
+        if (Article::create($title, $abstract, $text, $user_id)) {
+            header("Location: /"); 
+            exit();
+        } else {
+            die("Napaka pri shranjevanju novice.");
+        }
+    }
 }
