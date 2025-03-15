@@ -104,4 +104,11 @@ class Article
         $stmt = $db->prepare($query);
         $stmt->execute();
     }
+
+    public static function delete($id){
+        $db = Db::getInstance();
+        $query = "DELETE FROM articles WHERE id = '$id'";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+    }
 }

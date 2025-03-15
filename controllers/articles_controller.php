@@ -109,4 +109,15 @@ class articles_controller
         }
     } 
 
+    function delete(){
+        if(isset($_SESSION["USER_ID"])){
+            if(isset($_GET['id'])){
+                Article::delete($_GET['id']);
+                header("Location: /articles/list");
+
+            }
+        }
+    }
+    
+
 }
