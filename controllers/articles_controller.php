@@ -64,4 +64,49 @@ class articles_controller
             die("Napaka pri shranjevanju novice.");
         }
     }
+
+
+    function list(){
+        $articles = []; 
+    
+        if(isset($_SESSION["USER_ID"])){
+            $articles = Article::list($_SESSION["USER_ID"]);
+        }
+    
+        require_once('views/articles/list.php'); //form
+    }
+
+    function edit(){
+        if(isset($_SESSION["USER_ID"])){
+            if(isset($_GET['id'])){
+                $article = Article::find($_GET['id']);
+
+
+                require_once('views/articles/edit.php');
+            }
+        }
+    }
+
+    function update() {
+        if (isset($_SESSION["USER_ID"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
+            if (!empty($_POST["id"]) && !empty($_POST["title"]) && !empty($_POST["abstract"]) && !empty($_POST["text"])) {
+                $id = $_POST["id"];
+                $title = $_POST["title"];
+                $abstract = $_POST["abstract"];
+                $text = $_POST["text"];
+    
+                Article::update( $id, $title, $abstract, $text);
+                header("Location: /"); 
+
+                
+            } else {
+                header("Location: /articles/edit?id=" . $_POST["id"] . "&error=missing_data");
+                exit();
+            }
+        } else {
+            header("Location: /login");
+            exit();
+        }
+    } 
+
 }

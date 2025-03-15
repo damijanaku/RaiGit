@@ -71,5 +71,37 @@ class Article
         } else {
             die("Napaka pri shranjevanju: " . $stmt->error);
         }
+    
+    
+    }
+
+    public static function list($user_id){
+        $db = Db::getInstance();
+        
+        $stmt = $db->prepare("SELECT id, title, abstract, text, date, user_id FROM articles WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+    
+        $articles = [];
+        while ($article = $res->fetch_object()) {
+            $articles[] = new Article(
+                $article->id, 
+                $article->title, 
+                $article->abstract, 
+                $article->text, 
+                $article->date, 
+                $article->user_id 
+            );
+        }
+    
+        return $articles; 
+    }
+
+    public static function update($id, $title, $abstract, $text){
+        $db = Db::getInstance();
+        $query = "UPDATE articles SET title = '$title', abstract = '$abstract', text = '$text' WHERE id = '$id'";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
     }
 }
