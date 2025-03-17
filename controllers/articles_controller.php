@@ -118,6 +118,21 @@ class articles_controller
             }
         }
     }
+
+    function comment(){
+        if(isset($_SESSION["USER_ID"])){
+            if(!empty($_POST["article_id"] && !empty($_POST["content"]))){
+                $article_id = $_POST["article_id"];
+                $user_id = $_SESSION["USER_ID"];
+                $content = trim($_POST["content"]);
+
+
+                Comment::add($article_id, $user_id, $content);
+            }
+        }
+
+        
+    }
     
 
 }
