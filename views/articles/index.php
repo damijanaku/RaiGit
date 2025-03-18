@@ -4,10 +4,18 @@
         <div class="article">
             <h4><?php echo htmlspecialchars($article->title); ?></h4>
             <p><?php echo htmlspecialchars($article->abstract); ?></p>
-            <p>Objavil: <?php echo htmlspecialchars($article->user->username); ?>, 
+            <p>Objavil: 
+                <?php 
+                    if ($article->user) {
+                        echo '<a href="/users/viewprofile?id=' . $article->user->id . '">'
+                            . htmlspecialchars($article->user->username) . '</a>';
+                    } else {
+                        echo "Neznan uporabnik";
+                    }
+                    ?>, 
                 <?php echo date_format(date_create($article->date), 'd. m. Y \ob H:i:s'); ?>
             </p>
-            <a href="/articles/show?id=<?php echo $article->id;?>"><button>Preberi več</button></a>
+            <a href="/articles/show?id=<?php echo $article->id;?>"><button class="btn btn-secondary">Preberi več</button></a>
             <br><br>
 
             <!-- form -->
@@ -34,8 +42,14 @@
                 <?php foreach ($comments as $comment): ?>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <p><strong><?php echo htmlspecialchars($comment['username']); ?></strong></p>
-                            <p><?php echo nl2br(htmlspecialchars($comment['content'])); ?></p>
+                        <p>
+                            <strong>
+                            <a href="/users/viewprofile?id=<?php echo $comment['user_id']; ?>">
+                                <?php echo htmlspecialchars($comment['username']); ?>
+                                </a>
+                            </strong>
+                        </p>                            
+                        <p><?php echo nl2br(htmlspecialchars($comment['content'])); ?></p>
                             <small class="text-muted"><?php echo $comment['created_at']; ?></small>
                         </div>
                     </div>

@@ -87,4 +87,58 @@ class users_controller
         }
         die();
     }
+
+    function profile() {
+        // Redirect to login if user is not logged in
+        if (!isset($_SESSION["USER_ID"])) {
+            header("Location: /auth/login");
+            exit();
+        }
+
+        // Fetch user details
+        $user = User::find($_SESSION["USER_ID"]);
+
+        // If user not found, redirect
+        if (!$user) {
+            header("Location: /users/edit?error=user_not_found");
+            exit();
+        }
+
+        $counts = User::getCounts($user->id); 
+
+
+        // Load the profile view
+        require_once('views/users/profile.php');
+    }
+
+    public function viewProfile() {
+        if (!isset($_GET["id"])) {
+            if (!isset($_SESSION["USER_ID"])) {
+                header("Location: /auth/login");
+                exit();
+            }
+            header("Location: /users/profile");
+            exit();
+        }
+    
+        $user_id = $_GET["id"];
+    
+        if (isset($_SESSION["USER_ID"]) && $_SESSION["USER_ID"] == $user_id) { // redirect to my profile
+            header("Location: /users/profile");
+            exit();
+        }
+    
+        $user = User::find($user_id); //find user
+        if (!$user) {
+            header("Location: /users/profile?error=user_not_found");
+            exit();
+        }
+
+        $counts = User::getCounts($user->id); // fetch count
+
+    
+        require_once('views/users/view_profile.php');
+    }
+
+    
 }
